@@ -17,6 +17,7 @@ pub struct PixelRain
 	canvas: NodeRef,
 	particles: Vec<Particle>,
 	callback: Closure<dyn FnMut()>,
+	brightness_map: Vec<Vec<(u8, u8, u8, f64)>>,
 }
 
 impl Component for PixelRain
@@ -44,6 +45,7 @@ impl Component for PixelRain
 			canvas: NodeRef::default(),
 			particles: Vec::new(),
 			callback,
+			brightness_map: Vec::new(),
 		}
 	}
 
@@ -53,12 +55,44 @@ impl Component for PixelRain
 		{
 			Msg::FetchImageOk(image) => 
 			{
-				let width = image.width();
-				let height = image.height();
+				let width: usize = image.width() as usize;
+				let height: usize = image.height() as usize;
 				let canvas: HtmlCanvasElement = self.canvas.cast().unwrap();
-				canvas.set_width(width);
-				canvas.set_height(height);
+				canvas.set_width(width as u32);
+				canvas.set_height(height as u32);
 				self.particles = (0..10000).map(|_| {Particle::new(width, height)}).collect();
+
+				let render_ctx: CanvasRenderingContext2d = canvas
+					.get_context("2d")
+					.unwrap()
+					.unwrap()
+					.unchecked_into();
+				render_ctx.draw_image_with_image_bitmap(&image, 0.0, 0.0).unwrap();
+				let image_data = render_ctx.get_image_data(
+					0.0,
+					0.0,
+					width as f64,
+					height as f64
+				).unwrap();
+
+				render_ctx.clear_rect(0.0, 0.0, width as f64, height as f64);
+				let buffer = (*image_data.data()).clone();
+
+				for y in 0usize..height
+				{
+					let mut row = Vec::new();
+					row.reserve(width);
+					for x in 0usize..width
+					{
+						let red = buffer[(y * 4usize * width) + (x * 4)];
+						let green = buffer[(y * 4usize * width) + (x * 4) + 1];
+						let blue = buffer[(y * 4usize * width) + (x * 4) + 2];
+						let brightness = relative_brightness(red as f64, green as f64, blue as f64);
+						row.push((red,green,blue,brightness));
+					}
+					self.brightness_map.push(row);
+				}
+
 				ctx.link().send_message(Msg::Render);
 				true
 			},
@@ -105,7 +139,7 @@ impl PixelRain
 		ctx.set_global_alpha(0.2);
 		self.particles.iter_mut().for_each(|particle|
 			{
-				particle.update();
+				particle.update(&self.brightness_map);
 				particle.render(&ctx);
 			});
 		window().unwrap()
@@ -127,12 +161,12 @@ struct Particle
 
 impl Particle
 {
-	fn new(width: u32, height: u32) -> Self
+	fn new(width: usize, height: usize) -> Self
 	{
 		let mut rand = thread_rng();
 		let x = rand.gen_range(0f64..width as f64);
 		let y = 0 as f64;
-		let velocity = rand.gen_range(0.5..10.0);
+		let velocity = rand.gen_range(0.1..5.0);
 		let size = rand.gen_range(1.0..2.0);
 		Self
 		{
@@ -145,9 +179,12 @@ impl Particle
 		}
 	}
 
-	fn update(self: &mut Self)
+	fn update(self: &mut Self, brightness_map: &Vec<Vec<(u8,u8,u8,f64)>>)
 	{
-		let delta_y = self.velocity + self.speed;
+		let x: usize = self.x as usize;
+		let y: usize = self.y as usize;
+		self.speed = brightness_map[y][x].3;
+		let delta_y = -self.speed + self.velocity;
 		self.y += delta_y;
 		if self.y > self.max_height
 		{
@@ -189,5 +226,10 @@ async fn fetch_image(file_path: &str) -> Result<ImageBitmap, FetchImageError>
 
 	let image_bitmap_prom = window.create_image_bitmap_with_blob(&blob)?;
 	Ok(JsFuture::from(image_bitmap_prom).await?.dyn_into()?)
+}
+
+fn relative_brightness(r: f64, g: f64, b: f64) -> f64
+{
+	js_sys::Math::sqrt(r*r*0.299 + g*g*0.587 + b*b*0.114) / 100.0
 }
 
