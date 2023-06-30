@@ -60,7 +60,7 @@ impl Component for PixelRain
 				let canvas: HtmlCanvasElement = self.canvas.cast().unwrap();
 				canvas.set_width(width as u32);
 				canvas.set_height(height as u32);
-				self.particles = (0..10000).map(|_| {Particle::new(width, height)}).collect();
+				self.particles = (0..2000).map(|_| {Particle::new(width, height)}).collect();
 
 				let render_ctx: CanvasRenderingContext2d = canvas
 					.get_context("2d")
@@ -140,6 +140,7 @@ impl PixelRain
 		self.particles.iter_mut().for_each(|particle|
 			{
 				particle.update(&self.brightness_map);
+				ctx.set_global_alpha(particle.speed * 0.1);
 				particle.render(&ctx);
 			});
 		window().unwrap()
@@ -184,7 +185,7 @@ impl Particle
 		let x: usize = self.x as usize;
 		let y: usize = self.y as usize;
 		self.speed = brightness_map[y][x].3;
-		let delta_y = -self.speed + self.velocity;
+		let delta_y = 3.0 -self.speed + self.velocity;
 		self.y += delta_y;
 		if self.y > self.max_height
 		{
