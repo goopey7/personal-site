@@ -99,8 +99,10 @@ impl PixelRain
 			.unwrap()
 			.unwrap()
 			.unchecked_into();
+		ctx.set_global_alpha(0.05);
 		ctx.set_fill_style(&JsValue::from_str("black"));
 		ctx.fill_rect(0.0, 0.0, canvas.width() as f64, canvas.height() as f64);
+		ctx.set_global_alpha(0.2);
 		self.particles.iter_mut().for_each(|particle|
 			{
 				particle.update();
