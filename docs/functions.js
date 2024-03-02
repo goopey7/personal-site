@@ -3,12 +3,11 @@ $(document).ready(function()
 
     setInterval ('cursorAnimation()', 600);
     
-    var text = 'whois sam.collier<br><br>Sam Collier, Born on the 16th of September 2002.'+
+    var text = 'whois sam.collier<br><br>Sam Collier, Passionate Game Developer and Entrepreneur'+
 	'<br><br><b>Contact</b>: &nbsp; &nbsp; <a href="https://www.linkedin.com/in/samuel-collier/">LinkedIn</a>'+
-	'&nbsp; &nbsp; <a href="https://www.instagram.com/samc0llier/">Instagram</a>'+
 	' &nbsp; <a href="mailto:sam@samcollier.tech">sam@samcollier.tech</a>'+
 	'<br><br><a href="https://github.com/goopey7"><b>You can find my code on GitHub</b></a>'+
-	'<br><br><a href="https://dnekos.itch.io/lucifur"><b>Checkout the game I made with my team for the AGDS Halloween Game Jam!</b></a>'+
+	'<br><br><a href="https://triple7studios.itch.io/left-upon-read-first-playable"><b>Check out my team\'s first playable!</b></a>'+
 	'<br><br>#';
     type(text);
 });
