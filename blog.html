@@ -4,10 +4,16 @@ title: Blog
 ---
 
 <h1>Blog</h1>
-<ul>
+
+<div class="post-list">
   {% for post in site.posts %}
-    <li>
-      <a href="{{ post.url }}">{{ post.title }}</a> - {{ post.date | date: "%b %-d, %Y" }}
-    </li>
+    <a href="{{ post.url }}" class="post-card">
+      <img src="{{ post.thumbnail | default: '/assets/thumbs/default.png' }}" alt="Thumbnail">
+      <div class="post-info">
+        <h2>{{ post.title }}</h2>
+        <p class="meta">{{ post.date | date: "%B %d, %Y" }}</p>
+        <p>{{ post.description }}</p>
+      </div>
+    </a>
   {% endfor %}
-</ul>
+</div>
