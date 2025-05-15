@@ -1,0 +1,20 @@
+---
+layout: default
+title: Portfolio
+---
+
+<h1>Portfolio</h1>
+
+<div class="post-list">
+  {% for item in site.portfolio %}
+    <a href="{{ item.url }}" class="post-card">
+      <img src="{{ item.thumbnail | default: '/assets/thumbs/default.png' }}" alt="Thumbnail">
+      <div class="post-info">
+        <h2>{{ item.title }}</h2>
+        <p class="meta">{{ item.date | date: "%B %d, %Y" }}</p>
+        <p>{{ item.description }}</p>
+      </div>
+    </a>
+  {% endfor %}
+</div>
+
