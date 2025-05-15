@@ -1,0 +1,87 @@
+/* Base */
+body {
+  font-family: 'Fira Code', 'Courier New', monospace;
+  background-color: #1e1e2f;
+  color: #e0e0f0;
+  margin: 0;
+  padding: 2em;
+  max-width: 800px;
+  margin: auto;
+  line-height: 1.7;
+}
+
+h1, h2, h3 {
+  color: #ffd369;
+  margin-top: 1.5em;
+}
+
+a {
+  color: #8be9fd;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Navigation */
+nav {
+  background: #282c34;
+  padding: 1em;
+  border-radius: 10px;
+  margin-bottom: 2em;
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  gap: 2em;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+}
+
+nav a {
+  color: #f8f8f2;
+  font-weight: bold;
+  transition: color 0.2s;
+}
+
+nav a.active {
+  color: #50fa7b;
+  border-bottom: 2px solid #50fa7b;
+}
+
+nav a:hover {
+  color: #ff79c6;
+}
+
+/* Blog post content */
+.post {
+  margin-top: 2em;
+}
+
+.post h1 {
+  color: #f1fa8c;
+}
+
+.post em {
+  color: #bd93f9;
+}
+
+/* Responsive tweaks */
+@media (max-width: 600px) {
+  nav ul {
+    flex-direction: column;
+    gap: 1em;
+  }
+}
+
+/* Code blocks */
+pre, code {
+  background: #2d2d3a;
+  padding: 0.5em;
+  border-radius: 5px;
+  overflow-x: auto;
+}
+
