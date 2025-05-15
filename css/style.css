@@ -1,7 +1,7 @@
 body {
-  font-family: 'Fira Code', 'Courier New', monospace;
-  background-color: #1e1e2f;
-  color: #e0e0f0;
+  font-family: 'Fira Code', monospace;
+  background-color: #1d2021;
+  color: #ebdbb2;
   margin: 0;
   padding: 2em;
   max-width: 800px;
@@ -10,22 +10,23 @@ body {
 }
 
 h1, h2, h3 {
-  color: #ffd369;
+  color: #fabd2f;
   margin-top: 1.5em;
 }
 
 a {
-  color: #8be9fd;
+  color: #8ec07c;
   text-decoration: none;
 }
 
 a:hover {
+  color: #fb4934;
   text-decoration: underline;
 }
 nav {
-  background: #282c34;
+  background: #282828;
   padding: 1em;
-  border-radius: 10px;
+  border-radius: 8px;
   margin-bottom: 2em;
 }
 
@@ -39,29 +40,30 @@ nav ul {
 }
 
 nav a {
-  color: #f8f8f2;
+  color: #ebdbb2;
   font-weight: bold;
-  transition: color 0.2s;
+  padding-bottom: 2px;
+  transition: color 0.2s, border-bottom 0.2s;
 }
 
 nav a.active {
-  color: #50fa7b;
-  border-bottom: 2px solid #50fa7b;
+  color: #fe8019;
+  border-bottom: 2px solid #fe8019;
 }
 
 nav a:hover {
-  color: #ff79c6;
+  color: #fb4934;
 }
 .post {
   margin-top: 2em;
 }
 
 .post h1 {
-  color: #f1fa8c;
+  color: #fabd2f;
 }
 
 .post em {
-  color: #bd93f9;
+  color: #d3869b;
 }
 pre, code {
   background: #3c3836;
