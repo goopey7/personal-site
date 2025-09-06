@@ -17,14 +17,14 @@ My goal would be to bring gameplay from a UE5 project to Wii hardware. I don't w
 ### A Hello world on the Wii
 I've never done any programming for the Wii, so I'd like to get the toolchain setup and see some code running within [Dolphin Emulator](https://dolphin-emu.org). I came across [devkitPro](https://github.com/devkitPro) which includes a toolchain for Wii/GC's PowerPC architecture, and a [series of examples](https://github.com/devkitPro/wii-examples) including a hello triangle and audio! DevkitPro needs a posix style environment so it installed MSYS onto my Windows installation. In the future I'll likely be developing on Arch because having this weird fake linux thing on the horrible experience that is Windows is gonna be frustrating. But all I had to do was fire up MSYS and run make on a few examples and load them into Dolphin! All worked out the box!
 
-<img src="../../../assets/wii_hello_triangle.png" alt="drawing" width="1000"/>
+<img src="../../../assets/wii_hello_triangle.png" alt="Wii Hello Triangle" width="1000"/>
 
 ## This is just the beginning
-So it looks easy to iterate code on the Wii thanks to Dolphin. I can quickly compile and run which is real nice and it looks like Dolphin does come with some debugging capabilities too which is real nice. I'm glad that we're starting with a nice base though because what is to come will be challenging and hopefully an academic year's worth of exploration:
+So it looks easy to iterate code on the Wii thanks to Dolphin. I can quickly compile and run which is real nice and it looks like Dolphin does come with some debugging capabilities too! I'm glad that we're starting with a pleasant base though because what is to come will be challenging and hopefully an academic year's worth of exploration:
 
 ### There's still plenty to sink my teeth into
 - Compiling Unreal Engine 5.6 using devkitPro's PowerPC g++ compiler
-    - Maybe start with GNU g++ first (Unreal already supports clang)
+    - Maybe start with GNU g++ first
     - Hopefully now that Unreal is on C++20 which has permissive- enabled on MSVC, there shouldn't be too much weirdness unless devkitPro does very weird non conformant things
 - Cooking uassets for the Wii
 - Implementing the Wii's platform classes
