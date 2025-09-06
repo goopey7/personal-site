@@ -7,7 +7,7 @@ description: "Can our Unreal Engine 5 game run on the Wii?"
 ---
 
 ## Why?
-I have to write a dissertation for my final year of Computer Games Technology at Abertay University. I left my internship at Rare wanting more experience grappling with low level code. I've also been working on a game in Unreal Engine 5 with my team at 777 studios. So how cool would it be to get our awesome game working on Wii hardware? And as an extra bonus, what if we could control the player's sword with the Wiimote's motion sensors? This is quite an ambitious undertaking, but I think it'd make a very interesting read whether it goes well or not. And if it does go very well, there'll be a pretty awesome demo for the digital grad show!
+I have to write a dissertation for my final year of Computer Games Technology at Abertay University. I left my internship at Rare wanting more experience grappling with low level code. I've also been working on [a game in Unreal Engine 5 with my team at 777 studios](https://triple7studios.itch.io/left-upon-read). So how cool would it be to get our awesome game working on Wii hardware? And as an extra bonus, what if we could control the player's sword with the Wiimote's motion sensors? This is quite an ambitious undertaking, but I think it'd make a very interesting read whether it goes well or not. And if it does go very well, there'll be a pretty awesome demo for the digital grad show!
 
 ## Setting Expectations
 My goal would be to bring gameplay from a UE5 project to Wii hardware. I don't want to do a dissertation on graphics, so all I want is to chuck 3D stuff on the screen. Any extra graphics features like lighting, anti aliasing, VFX, etc. are stretch goals (after adding motion controls). Same with audio. Nothing crazy to begin with but we can go for some stretch goals later on. I'm not porting the visual fidelity of UE5 to the Wii, I just want to be able to take any existing UE5 project and see a beautifully scuffed looking version of it playable on the Wii with minimal engine modifications. I'm not bothered about additional engine modules and plugins, but if I have to heavily change the engine's code in such a way that it could become difficult to take in engine upgrades, other people might be less inclined to mess with this project.
@@ -24,7 +24,7 @@ So it looks easy to iterate code on the Wii thanks to Dolphin. I can quickly com
 
 ### There's still plenty to sink my teeth into
 - Compiling Unreal Engine 5.6 using devkitPro's PowerPC g++ compiler
-    - Maybe start with GNU g++ first
+    - Maybe start with clang on x64 then slowly shift to GCC on x64 since clang and gcc should be compatible for linking. Then move onto PowerPC's gcc.
     - Hopefully now that Unreal is on C++20 which has permissive- enabled on MSVC, there shouldn't be too much weirdness unless devkitPro does very weird non conformant things
 - Cooking uassets for the Wii
 - Implementing the Wii's platform classes
