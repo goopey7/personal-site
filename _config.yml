@@ -1,7 +1,7 @@
 title: Sam Collier
 description: Sam Collier's Portfolio and Blog
 baseurl: ""
-url: "http://localhost:4000"
+url: "https://samcollier.dev"
 collections:
   portfolio:
     output: true

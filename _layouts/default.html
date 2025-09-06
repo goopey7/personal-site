@@ -4,6 +4,17 @@
     <meta charset="UTF-8">
     <title>{{ page.title }}</title>
     <link rel="stylesheet" href="/css/style.css">
+
+    <meta property="og:type" content="{% if page.layout == 'post' %}article{% else %}website{% endif %}" />
+    <meta property="og:url" content="{{ page.url | absolute_url }}" />
+    <meta property="og:title" content="{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}" />
+    <meta property="og:description" content="{% if page.description %}{{ page.description }}{% elsif page.excerpt %}{{ page.excerpt | strip_html | strip_newlines | truncate: 160 }}{% else %}{{ site.description }}{% endif %}" />
+    <meta property="og:image" content="{% if page.thumbnail %}{{ page.thumbnail | absolute_url }}{% else %}{{ '/assets/thumbs/default.png' | absolute_url }}{% endif %}" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}" />
+    <meta name="twitter:description" content="{% if page.description %}{{ page.description }}{% elsif page.excerpt %}{{ page.excerpt | strip_html | strip_newlines | truncate: 160 }}{% else %}{{ site.description }}{% endif %}" />
+    <meta name="twitter:image" content="{% if page.thumbnail %}{{ page.thumbnail | absolute_url }}{% else %}{{ '/assets/thumbs/default.png' | absolute_url }}{% endif %}" />
   </head>
   <body>
 	{% include nav.html %}
