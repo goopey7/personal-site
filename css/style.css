@@ -9,18 +9,14 @@ body {
   margin-left: auto;
   margin-right: auto;
 }
-
-
 h1, h2, h3 {
   color: #fabd2f;
   margin-top: 1.5em;
 }
-
 a {
   color: #8ec07c;
   text-decoration: none;
 }
-
 a:hover {
   color: #fb4934;
   text-decoration: underline;
@@ -31,7 +27,6 @@ nav {
   border-radius: 8px;
   margin-bottom: 2em;
 }
-
 nav ul {
   list-style: none;
   display: flex;
@@ -40,30 +35,25 @@ nav ul {
   margin: 0;
   padding: 0;
 }
-
 nav a {
   color: #ebdbb2;
   font-weight: bold;
   padding-bottom: 2px;
   transition: color 0.2s, border-bottom 0.2s;
 }
-
 nav a.active {
   color: #fe8019;
   border-bottom: 2px solid #fe8019;
 }
-
 nav a:hover {
   color: #fb4934;
 }
 .post {
   margin-top: 2em;
 }
-
 .post h1 {
   color: #fabd2f;
 }
-
 .post em {
   color: #d3869b;
 }
@@ -111,6 +101,15 @@ pre, code {
   nav ul {
     flex-direction: column;
     gap: 1em;
+  }
+  .footer-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+    align-items: center;
+  }
+  .footer-links a {
+    margin: 0;
   }
 }
 .post-list {

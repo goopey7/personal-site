@@ -17,7 +17,8 @@
     <meta name="twitter:image" content="{% if page.thumbnail %}{{ page.thumbnail | absolute_url }}{% else %}{{ '/assets/thumbs/default.png' | absolute_url }}{% endif %}" />
   </head>
   <body>
-	{% include nav.html %}
+    {% include nav.html %}
     {{ content }}
+    {% include footer.html %}
   </body>
 </html>

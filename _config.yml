@@ -2,6 +2,9 @@ title: Sam Collier
 description: Sam Collier's Portfolio and Blog
 baseurl: ""
 url: "https://samcollier.dev"
+github_username: goopey7
+linkedin_username: samuel-collier
+email: samcollier916@gmail.com
 collections:
   portfolio:
     output: true
