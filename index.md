@@ -5,7 +5,7 @@ title: Home
 
 # Sam Collier
 
-Welcome to my personal website.
+Game Developer and Entrepeneur. Currently learning more about low level systems.
 
 ---
 
