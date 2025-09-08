@@ -7,7 +7,7 @@ description: "Can we share memory across servers on a VM?"
 ---
 
 ## Why?
-I have to write a dissertation for my final year of Computer Games Technology at Abertay University. I left my internship at Rare wanting more experience grappling with low level code. It's common for AAA game server infrastructure to run several virtual machines which each will run a few instances of the game server. There's signaficant chunk of data that gets copied to memory each time a new server process is executed. Can we share non-trivial amounts of memory between seperate running processes on Windows and Linux. And if so, can we take advantage of this by integrating this tech into an Unreal Engine server?
+I have to write a dissertation for my final year of Computer Games Technology at Abertay University. I left my internship at Rare wanting more experience grappling with low level code. It's common for AAA game server infrastructure to run several virtual machines which each will run a few instances of the game server. There's a signaficant chunk of data that gets copied to memory each time a new server process is executed. Can we share non-trivial amounts of memory between seperate running processes on Windows and Linux? And if so, can we take advantage of this by integrating this tech into an Unreal Engine server?
 
 ### Why Unreal Engine?
 Designing my own game engine from the ground up around shared memory architecture would be too easy to spend an entire year on. Retrofitting this new tech into an existing established game engine is much more challenging, and could prove useful since Unreal Engine has loads of users and is the industry standard game engine.
