@@ -5,7 +5,7 @@ title: Home
 
 # Sam Collier
 
-Game Developer and Entrepeneur. Currently learning more about low level systems.
+Engine Programmer. Currently learning more about low level systems.
 
 ---
 
