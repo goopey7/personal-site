@@ -9,7 +9,7 @@ description: "Crash reporting without spending a dime"
 We ran into crashes all the time while playtesting our game over the past couple years.
 If it was a crash while playing in editor, the tester/designer would call for a programmer to look at the callstack in the crash window before it disappears!
 And maybe copy/paste or send a screenshot. For packaged builds of our game, we'd just get a dialogue popup that says "Fatal Error!" with no additional information.
-In that case we ask what they were doing just as crash happened because that's all we have to go off of.
+In that case we ask what they were doing just as the crash happened because that's all we have to go off of.
 
 It'd be really sick if instead, whenever the game crashes, callstacks and crash dumps are automatically collected and sent out.
 
