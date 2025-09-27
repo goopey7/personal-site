@@ -57,13 +57,6 @@ nav a:hover {
 .post em {
   color: #d3869b;
 }
-pre, code {
-  background: #3c3836;
-  color: #ebdbb2;
-  padding: 0.5em;
-  border-radius: 5px;
-  overflow-x: auto;
-}
 .site-footer {
   background: #282828;
   border-top: 2px solid #3c3836;
