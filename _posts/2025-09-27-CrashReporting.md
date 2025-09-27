@@ -15,10 +15,11 @@ It'd be really sick if instead, whenever the game crashes, callstacks and crash 
 
 # Unreal's Crash Reporter
 Unreal has [some docs on Crash Reporting](https://dev.epicgames.com/documentation/en-us/unreal-engine/crash-reporting-in-unreal-engine).
-Unreal has a crash reporter client available in the engine, but does not provide a server. Instead it recommends external services which cost money.
+There's a crash reporter client available in the engine, but no server. Instead the docs recommend external services which cost money.
 
-At a glance, all of these services look great, but we're skint. We have time, but we don't have money.
-The server shouldn't have to do much anyways, we just need the crash data to be accessible. We don't need a fancy UI platform thing.
+At a glance, all of these services look great, but we're skint students. We have time, but we don't have money.
+The server shouldn't have to do much anyways, we just need the crash data to be accessible. 
+We just want whatever data comes out of the http requests that get sent out of the client, this shouldn't require a fancy UI platform thing with glorified marketing pages.
 
 Since Unreal's source is available, we can observe and tweak the crash reporter client as needed.
 We can also observe the http requests sent out from the client to see what we get out the box.
