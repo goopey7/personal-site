@@ -100,4 +100,4 @@ From nosing around in neovim I've found the following embedded in this proprieta
     - A crash dump we can open in visual studio. Will have to try this out to see what we can get out of it!
     - Fingers crossed this'll save us a load of headache!
 
-## [Episode 2: Reverse Engineering the Crash Report File]("https://samcollier.dev/2025/09/28/CrashReporting.html")
+## [Episode 2: Reverse Engineering the Crash Report File](https://samcollier.dev/2025/09/28/CrashReporting.html)
