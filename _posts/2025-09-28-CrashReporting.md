@@ -124,12 +124,12 @@ for with log:
 So yup that's definitely file size!
 
 Since the xml was quite different, the git diff is no longer useful.
-Anyways we've almost seen enough.
+Anyways we've seen enough.
 
 In both cases, after the content is finished, we go right back to hitting `04 01 00 00` and starting the name of the next file.
 So that "file index" I mentioned earlier is just a count for how many files there are since it only appears once.
 
-## So to sum it all up
+## To sum it all up
 Unreal's crash report file is as follows:
 
 - 3 byte header "CR1"
