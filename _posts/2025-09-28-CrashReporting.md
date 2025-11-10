@@ -142,3 +142,5 @@ Unreal's crash report file is as follows:
 
 all strings after the CR1 header begin with `04 01 00 00`
 The remainder of the file is just filename + file content for every file included.
+
+## [Episode 3: Making my own crash report server](https://samcollier.dev/2025/11/10/CrashReporting.html)
