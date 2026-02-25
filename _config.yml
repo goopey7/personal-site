@@ -11,3 +11,5 @@ collections:
     permalink: /portfolio/:name
 exclude:
   - docker-compose.yml
+include:
+  - .well-known
