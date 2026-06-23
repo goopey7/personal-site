@@ -1,4 +1,8 @@
+file_listing = "include-data"
+
 passthrough_copy = [
     "style.css",
-    "*.png",
+    "assets/*",
+    "assets/crash-reporting/*",
+    "assets/unreal-wii/*",
 ]
