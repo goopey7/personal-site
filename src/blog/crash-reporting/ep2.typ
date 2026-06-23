@@ -4,6 +4,7 @@
   page-title: "UE5 Crash Reporting: Episode 2",
   date: datetime(year: 2025, month: 09, day: 28),
   description: "Reverse Engineering the Report File",
+  giscus: true,
 )
 
 By the end of #link("https://samcollier.dev/2025/09/27/CrashReporting.html")[episode 1] we managed to extract

@@ -4,6 +4,7 @@
   page-title: "UE5 Crash Reporting: Episode 1",
   date: datetime(year: 2025, month: 09, day: 27),
   description: "Crash reporting without spending a dime",
+  giscus: true,
 )
 
 We ran into crashes all the time while playtesting our game over the past couple years.

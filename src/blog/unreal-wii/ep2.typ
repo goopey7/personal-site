@@ -4,6 +4,7 @@
   page-title: "UE5 on the Wii: Episode 2",
   date: datetime(year: 2025, month: 11, day: 07),
   description: "Remember, this is an honors project",
+  giscus: true,
 )
 
 For my honors project, I'm porting Unreal Engine 5 to the Wii.

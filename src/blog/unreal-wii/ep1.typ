@@ -4,6 +4,7 @@
   page-title: "UE5 on the Wii: Episode 1",
   date: datetime(year: 2025, month: 09, day: 25),
   description: "Cross-compiling with CMake",
+  giscus: true,
 )
 
 I've decided to go with putting Unreal Engine 5 on the Wii for my dissertation!

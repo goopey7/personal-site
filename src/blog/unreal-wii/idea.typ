@@ -4,6 +4,7 @@
   page-title: "Honors Project Idea: UE5 on the Wii",
   date: datetime(year: 2025, month: 09, day: 06),
   description: "Can our Unreal Engine 5 game run on the Wii?",
+  giscus: true,
 )
 
 == Why?

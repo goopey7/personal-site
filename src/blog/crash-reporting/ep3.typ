@@ -4,6 +4,7 @@
   page-title: "UE5 Crash Reporting: Episode 3",
   date: datetime(year: 2025, month: 11, day: 10),
   description: "Making my own crash reporting server",
+  giscus: true,
 )
 
 This is the easy part. I went with rust for our crash report server. I used axum for the webserver and askama for generating the html for the UI.

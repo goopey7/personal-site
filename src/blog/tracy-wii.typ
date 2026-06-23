@@ -4,6 +4,7 @@
   page-title: "Profiling the Wii",
   date: datetime(year: 2025, month: 12, day: 01),
   description: "A Writeup of Porting Tracy",
+  giscus: true,
 )
 
 = Porting Tracy to the Wii Writeup

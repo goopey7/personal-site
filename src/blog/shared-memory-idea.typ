@@ -4,6 +4,7 @@
   page-title: "Honors Project Idea: Shared Memory for UE5 Servers",
   date: datetime(year: 2025, month: 09, day: 08),
   description: "Can we share memory across servers on a VM?",
+  giscus: true,
 )
 
 == Why?
