@@ -42,7 +42,7 @@
       data-reactions-enabled: "1",
       data-emit-metadata: "0",
       data-input-position: "bottom",
-      data-theme: "gruvbox_dark",
+      data-theme: "dark",
       data-lang: "en",
       data-loading: "lazy",
       crossorigin: "anonymous",
