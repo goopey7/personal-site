@@ -1,7 +1,6 @@
 #import "../templates/base.typ": conf
 
 #show: conf.with(
-  page-title: "home",
+  page-title: "Sam Collier",
 )
-
-My name is _sam_. There are many like it, but this one is mine.
+Engine Programmer. Currently learning more about low level systems.
