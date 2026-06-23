@@ -1,10 +1,11 @@
----
-layout: post
-title: "UE5 Crash Reporting: Episode 3"
-date: 2025-11-10
-thumbnail: /assets/thumbs/CrashReportThumb.png
-description: "Making my own crash reporting server"
----
+#import "../../../templates/base.typ": conf
+
+#show: conf.with(
+  page-title: "UE5 Crash Reporting: Episode 3",
+  date: datetime(year: 2025, month: 11, day: 10),
+  description: "Making my own crash reporting server",
+  giscus: true,
+)
 
 This is the easy part. I went with rust for our crash report server. I used axum for the webserver and askama for generating the html for the UI.
 The server runs two services on two different ports. One is just the endpoint to receive POST requests from the crash report client, and the other
@@ -14,7 +15,7 @@ Here is the function that handles incoming crash reports.
 Slices in rust are awesome and you can see heavy use of them here as we parse out the bytes from the request.
 
 We also send a discord webhook notification to our server!
-<img src="../../../assets/CrashReportDiscord.png" alt="Crash Report Discord" width="1000"/>
+#image("../../assets/crash-reporting/CrashReportDiscord.png")
 
 ```rust
 async fn handle_crash_report(
@@ -136,13 +137,13 @@ async fn handle_crash_report(
 }
 ```
 
-# Generating HTML for the UI
+= Generating HTML for the UI
 
 I shamelessly used an LLM to generate the CSS and add the modal that pops up when you click on a crash. But using askama to generate html from rust was so
 easy.
 
 To list out the crash reports in HTML I just had to do this:
-{% raw %}
+
 ```html
 <h1>Crash Reports</h1>
 
@@ -159,8 +160,8 @@ To list out the crash reports in HTML I just had to do this:
 
     <div class="crash-list">
         {% for crash in crashes %}
-            <div class="crash-row" 
-                 data-timestamp="{{ crash.timestamp | lower }}" 
+            <div class="crash-row"
+                 data-timestamp="{{ crash.timestamp | lower }}"
                  data-error="{{ crash.overview.error | lower }}"
                  data-user-description="{{ crash.overview.user_description | lower }}"
                  onclick="openModal('{{ crash.timestamp }}')">
@@ -168,8 +169,9 @@ To list out the crash reports in HTML I just had to do this:
                 <div class="error-preview">{{ crash.overview.error }}</div>
             </div>
 ```
-The stuff inside {% %} is for askama which generates the HTML on the fly with the `.render()` method at the end of the following snippet:
-{% endraw %}
+
+The stuff inside `{% %}` is for askama which generates the HTML on the fly with the `.render()` method at the end of the following snippet:
+
 ```rust
 #[derive(Template)]
 #[template(path = "crash_list.html")]
@@ -205,8 +207,8 @@ async fn handle_list(State(path): State<PathBuf>) -> impl IntoResponse {
 ```
 
 With a bit of CSS magic we can get a site that looks like this
-<img src="../../../assets/CrashReportUIList.png" alt="Crash Report UI" width="1000"/>
-<img src="../../../assets/CrashReportUI.png" alt="Crash Report UI" width="1000"/>
+#image("../../assets/crash-reporting/CrashReportUIList.png")
+#image("../../assets/crash-reporting/CrashReportUI.png")
 
 The code is not open source yet. Still need to decide if I release it through 777 studios or just personally.
 Feel free to leave a comment if you want the code open sourced and I'll do my best to expedite it!

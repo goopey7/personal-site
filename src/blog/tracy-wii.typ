@@ -1,31 +1,36 @@
----
-layout: post
-title: "Profiling the Wii"
-date: 2025-12-01
-thumbnail: /assets/thumbs/TracyWiiThumb.png
-description: "A Writeup of Porting Tracy"
----
+#import "../../templates/base.typ": conf
 
-# Porting Tracy to the Wii Writeup
+#show: conf.with(
+  page-title: "Profiling the Wii",
+  date: datetime(year: 2025, month: 12, day: 01),
+  description: "A Writeup of Porting Tracy",
+  giscus: true,
+)
 
-## Platform Define
+= Porting Tracy to the Wii Writeup
+
+== Platform Define
+
 For the `Wii.cmake` toolchain file we get `__wii__` and `HW_RVL` (for revolution) defined for the Wii.
 For the Gamecube file we get `__gamecube__` and `HW_DOL` (for dolphin)
 
-## Big Endian
+== Big Endian
+
 Tracy has no support for big endian devices like the Wii so I had to implement support myself.
 This meant I had to gain an understanding of how Tracy sends and receives data in order to come up with the best solution for endian conversions.
 
 Ideally we can have all data sent across the network in big endian, so our Wii doesn't have to do any conversions at runtime.
 
-### The Initial Handshake
+=== The Initial Handshake
+
 The handshake is the first exchange of information that occurs when connecting to a client.
-The server (the PC running the profiler GUI) will send something known as a shibboleth 
+The server (the PC running the profiler GUI) will send something known as a shibboleth
 which is just an identification string known at compile-time and the protocol version which is a 32-bit unsigned integer.
 
 If shibboleth or protocol version doesn't match on the client, the connection will be rejected.
 Otherwise the client will send a WelcomeMessage which contains a bunch of data about the client
 like cpuid, sampling period, timer multiplier, program name, and pid.
+
 ```cpp
 struct WelcomeMessage
 {
@@ -45,20 +50,23 @@ struct WelcomeMessage
     char hostInfo[WelcomeMessageHostInfoSize];
 }
 ```
+
 So we need a clever way to byteswap the protocol version and the elements within `WelcomeMessage`
 if we want to send them across the network in big endian. I imagine we're going to have to do this A LOT.
 So we must make it as easy as possible to convert structs and primitives.
 
-## Byteorder conversion functions
+== Byteorder conversion functions
+
 Let's first make a new compile-time definition: `TRACY_BIGENDIAN`.
 When defined, all data sent through the network must be in big endian byteorder.
 If not defined, then all data will be sent in little endian byteorder.
 So theoretically we could have `TRACY_BIGENDIAN` not defined and big endian devices would know to convert to little endian.
 
-Also, if the system's native byteorder is the same as the network's byteorder, then all the endian conversion code should be no-ops. 
+Also, if the system's native byteorder is the same as the network's byteorder, then all the endian conversion code should be no-ops.
 Switching byteorder from little endian to big endian and vice versa is the exact same operation which is handy.
 
 We can start with a function that will return the byteorder we are using for the network.
+
 ```cpp
 constexpr std::endian network_byteorder()
 {
@@ -69,13 +77,17 @@ constexpr std::endian network_byteorder()
 #endif
 }
 ```
+
 We can use this to check at compile-time if the host's byteorder is the same as the network's:
+
 ```cpp
 if constexpr( std::endian::native == network_byteorder() )
 ```
+
 Big shoutout to C++20 for adding `std::endian`!
 
 Let's start by handling our integer types:
+
 ```cpp
 template<typename T>
     requires std::is_integral_v<T>
@@ -99,7 +111,9 @@ constexpr T convert_endian( T value ) noexcept
     }
 }
 ```
+
 There are various enums throughout the codebase, so we can handle those now too:
+
 ```cpp
 template<typename T>
     requires std::is_enum_v<T>
@@ -108,6 +122,7 @@ constexpr T convert_endian( T value ) noexcept
     return static_cast<T>( convert_endian( static_cast<std::underlying_type_t<T>>( value ) ) );
 }
 ```
+
 Next up is floats and doubles. Here I've made the assumption that whatever CPU is running this conversion code is IEE-754 compliant.
 This means that binary 32-bit and binary 64-bit formats don't have padding bits.
 So I can treat a floating point type's bytes the same as an integer type's when swapping.
@@ -144,7 +159,6 @@ Lastly, we need a cunning way to convert structs.
 There's no generic one size fits all solution here for structs that aren't trivial and have some padding.
 so structs will have to implement a method called `convert_endian()` which will byteswap every element of the struct.
 
-{% raw %}
 ```cpp
 template<typename T>
 concept StructWithConvertEndianMethod = requires( T value ) {{ value.convert_endian()}; };
@@ -154,7 +168,7 @@ constexpr void convert_endian( T& value )
 {
     if constexpr( std::endian::native == network_byteorder() )
     {
-	    return;
+        return;
     }
     else
     {
@@ -162,7 +176,6 @@ constexpr void convert_endian( T& value )
     }
 }
 ```
-{% endraw %}
 
 So that `WelcomeMessage` struct mentioned earlier will have a `convert_endian()` method like so:
 
@@ -187,9 +200,10 @@ Now we have all the tools needed to effortlessly byteswap all the things!
 We don't even have to think about checking host byteorder since that's figured out for us too at compile-time
 and `convert_endian()` will vanish to a no-op if needed!
 
-Converting the byteorder of the protocol version and welcome message were no problem, and we've successfully gotten past the handshake! 
+Converting the byteorder of the protocol version and welcome message were no problem, and we've successfully gotten past the handshake!
 
-### Sending and Receiving Queue Items
+=== Sending and Receiving Queue Items
+
 You ready for the struct to end all structs? In some ways this could be seen as a blessing though.
 After the handshake tracy sends everything else as compressed lz4 and this is done in one place generalized with this `QueueItem` struct.
 
@@ -293,6 +307,7 @@ struct QueueItem
 ```
 
 Only gotcha was this variant which stores its size value in a non standard 6 byte manner
+
 ```cpp
 struct QueueMemAlloc
 {
@@ -302,11 +317,20 @@ struct QueueMemAlloc
     char size[6];
 };
 ```
+
 since this only happens once I just explicitly converted it in place instead of bothering with a new `convert_endian` implementation.
 
-## Threading
+And it only grows larger as more features are added to Tracy.
+So we write a python script which parses the C++ header and generates the `convert_endian()` method.
+That way, we can just run the script whenever we upgrade Tracy and the new gigantic method will be regenerated.
+
+This approach worked well and we were able to see profiling data from the Wii on Tracy's UI! As for performance, our Wii
+was able to hit a consistent ~62 FPS with a few zones.
+
+== Threading
+
 libogc has a very straightforward threading implementation under ogc/lwp.h
-functions are prefixed with LWP_
+functions are prefixed with LWP\_
 We can create, join, get self, sleep, signal, set priority and more.
 
 ```cpp
@@ -341,6 +365,7 @@ private:
 ```
 
 The implementation is pretty much identical to Tracy's pthread implementation:
+
 ```cpp
 class Thread
 {
@@ -368,6 +393,7 @@ private:
 ```
 
 Also had to do a similar sort of thing for `TracyMutex`
+
 ```cpp
 class TracyMutex
 {
@@ -382,7 +408,7 @@ public:
 };
 ```
 
-## Networking
+== Networking
 
 The Wii appears to have equivalent functions for most of the POSIX socket API used by Tracy. However the `addrinfo` struct doesn't exist, and so neither does `getaddrinfo()` and `freeaddrinfo()`. What even is `addrinfo`? Here's the description for `getaddrinfo()` in the man-pages:
 
@@ -400,17 +426,25 @@ So it's obsolete. Wonder why? My guess is probably because it's pre-IPv6?
 > The gethostbyname() function returns a structure of type hostent for the given host name.  Here name is either a hostname  or  an  IPv4  address  in standard  dot  notation.
 
 Yup this is IPv4 only. And that makes sense because the Wii doesn't support IPv6, so there's no need solve IPv6 problems on it.
-### UDP Broadcast
+
+=== UDP Broadcast
+
 The Wii's socket API would not allow me to open up a UDP socket. Although it's a nice-to-have and not a requirement, it prevents me from making the Wii advertise itself to tracy servers.
-## Timing
+
+== Timing
+
 Libogc has a very convenient macro called `ticks_to_nanosecs` which converts the Wii's CPU ticks to nanoseconds for us! We can get CPU ticks with `gettime()`
+
 ```cpp
-#define ticks_to_nanosecs(ticks)	((((u64)(ticks)*8000)/(u64)(TB_TIMER_CLOCK/125)))
+#define ticks_to_nanosecs(ticks) ((((u64)(ticks)*8000)/(u64)(TB_TIMER_CLOCK/125)))
 ```
-## 64-bit Atomics
+
+== 64-bit Atomics
+
 Tracy makes use of 64-bit atomics, and the Wii toolchain doesn't have an implementation for 64-bit atomics in the standard library.
 Fortunately we are super lucky that the Wii only has a single core CPU. This means that the only way to achieve concurrency
 is to use an interrupt handler. So we can simply emulate atomic operations by disabling interrupts temporarily.
+
 ```cpp
 uint64_t __atomic_load_8( const volatile void* ptr, int )
 {
@@ -436,12 +470,15 @@ uint64_t __atomic_fetch_add_8( volatile void* ptr, uint64_t val, int )
     return old;
 }
 ```
+
 The compiler only asked for these three implementations. So reading the value, assigning the value, and adding to the value.
 
-## Memory Reductions
+== Memory Reductions
+
 Here's a snippet from the profiler constructor.
 The Wii has 88MB of total system memory and these queues are too large, causing the Wii program to crash.
 Fortunately I haven't noticed any issues severely downsizing them!
+
 ```cpp
     , m_serialQueue( 1024*1024 )
     , m_serialDequeue( 1024*1024 )
@@ -458,4 +495,5 @@ Fortunately I haven't noticed any issues severely downsizing them!
     , m_deferredQueue( 64*1024 )
 #endif
 ```
+
 

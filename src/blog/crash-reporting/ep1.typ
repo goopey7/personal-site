@@ -1,10 +1,11 @@
----
-layout: post
-title: "UE5 Crash Reporting: Episode 1"
-date: 2025-09-27
-thumbnail: /assets/thumbs/CrashReportThumb.png
-description: "Crash reporting without spending a dime"
----
+#import "../../../templates/base.typ": conf
+
+#show: conf.with(
+  page-title: "UE5 Crash Reporting: Episode 1",
+  date: datetime(year: 2025, month: 09, day: 27),
+  description: "Crash reporting without spending a dime",
+  giscus: true,
+)
 
 We ran into crashes all the time while playtesting our game over the past couple years.
 If it was a crash while playing in editor, the tester/designer would call for a programmer to look at the callstack in the crash window before it disappears!
@@ -13,8 +14,9 @@ In that case we ask what they were doing just as the crash happened because that
 
 It'd be really sick if instead, whenever the game crashes, callstacks and crash dumps are automatically collected and sent out.
 
-# Unreal's Crash Reporter
-Unreal has [some docs on Crash Reporting](https://dev.epicgames.com/documentation/en-us/unreal-engine/crash-reporting-in-unreal-engine).
+= Unreal's Crash Reporter
+
+Unreal has #link("https://dev.epicgames.com/documentation/en-us/unreal-engine/crash-reporting-in-unreal-engine")[some docs on Crash Reporting].
 There's a crash reporter client available in the engine, but no server. Instead the docs recommend external services which cost money.
 
 At a glance, all of these services look great, but we're skint students. We have time, but we don't have money.
@@ -23,8 +25,10 @@ The server shouldn't have to do much anyways. We just want whatever data comes o
 Since Unreal's source is available, we can observe and tweak the crash reporter client as needed.
 We can also observe the http requests sent out from the client to see what we get out the box.
 
-## Setup the Crash Report Client
+== Setup the Crash Report Client
+
 To configure the crash report client I added the following to my project's `Config/DefaultEngine.ini`:
+
 ```ini
 [CrashReportClient]
 bAgreeToCrashUpload=false
@@ -37,6 +41,7 @@ bSendLogFile=true
 ```
 
 Then to package the crash report client with the game we have to add the following to `Config/DefaultGame.ini`:
+
 ```ini
 [/Script/UnrealEd.ProjectPackagingSettings]
 IncludeCrashReporter=True
@@ -44,21 +49,24 @@ IncludeCrashReporter=True
 
 Now let's write a crash that we can easily reproduce.
 I bound the following code to the 'C' key:
+
 ```cpp
 int* p = nullptr;
 *p = 42;
 ```
 
-### Mistakes were made
+=== Mistakes were made
+
 Do not use the project launcher to test this out! It doesn't package the crash reporter binaries!
 Instead use the package project button hidden away here:
 
-<img src="../../../assets/PackageProject.png" alt="Package Project" width="500"/>
+#image("../../assets/crash-reporting/PackageProject.png")
 
-## What happens out of the box?
+== What happens out of the box?
+
 Now instead of crashing with an ominous fatal error box, we get this:
 
-<img src="../../../assets/CrashReporterWindow.png" alt="Crash Reporter Window" width="800"/>
+#image("../../assets/crash-reporting/CrashReporterWindow.png")
 
 I've got a source engine build here. The development engine build I'm planning to make available to the team (via my cool binary delta patcher, stay tuned) won't have symbols,
 so it'll be interesting to see how the callstack log changes.
@@ -86,18 +94,18 @@ What I get out of zlib appears to be a proprietary unreal format which stiches t
 From nosing around in neovim I've found the following embedded in this proprietary file:
 
 - CrashContext.runtime-xml
-    - Error message (in our case EXCEPTION_ACCESS_VIOLATION)
-    - IsAssert, IsStall, IsEnsure
-    - Callstacks of every thread
-    - Hardware info
-    - Engine version
-    - Build Configuration
+  - Error message (in our case EXCEPTION_ACCESS_VIOLATION)
+  - IsAssert, IsStall, IsEnsure
+  - Callstacks of every thread
+  - Hardware info
+  - Engine version
+  - Build Configuration
 - CrashReportClient.ini
-    - All the settings used for the crash report client
+  - All the settings used for the crash report client
 - GoodTiming.log
-    - Since I had bSendLogFile set to true in the crash report client settings. We got the entire log!
+  - Since I had bSendLogFile set to true in the crash report client settings. We got the entire log!
 - UEMinidump.dmp
-    - A crash dump we can open in visual studio. Will have to try this out to see what we can get out of it!
-    - Fingers crossed this'll save us a load of headache!
+  - A crash dump we can open in visual studio. Will have to try this out to see what we can get out of it!
+  - Fingers crossed this'll save us a load of headache!
 
-## [Episode 2: Reverse Engineering the Crash Report File](https://samcollier.dev/2025/09/28/CrashReporting.html)
+== #link("https://samcollier.dev/crash-reporting/ep2")[Episode 2: Reverse Engineering the Crash Report File]

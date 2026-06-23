@@ -1,15 +1,17 @@
----
-layout: post
-title: "UE5 Crash Reporting: Episode 2"
-date: 2025-09-28
-thumbnail: /assets/thumbs/CrashReportThumb.png
-description: "Reverse Engineering the Report File"
----
+#import "../../../templates/base.typ": conf
 
-By the end of [episode 1](https://samcollier.dev/2025/09/27/CrashReporting.html) we managed to extract
+#show: conf.with(
+  page-title: "UE5 Crash Reporting: Episode 2",
+  date: datetime(year: 2025, month: 09, day: 28),
+  description: "Reverse Engineering the Report File",
+  giscus: true,
+)
+
+By the end of #link("https://samcollier.dev/2025/09/27/CrashReporting.html")[episode 1] we managed to extract
 the compressed data sent from the crash report client over http.
 
-# Reverse Engineering the Crash Report File
+= Reverse Engineering the Crash Report File
+
 I sent two different crashes to my server. One included the game's logfile and one did not.
 With the power of xxd and git diffs maybe we can notice some patterns.
 
@@ -64,21 +66,26 @@ So maybe `04 01 00 00` is some kind of delmiter to mark the start of some data?
  00000220: 0100 0043 7261 7368 436f 6e74 6578 742e  ...CrashContext.
  00000230: 7275 6e74 696d 652d 786d 6c00 0000 0000  runtime-xml.....
  00000240: 0000 0000 0000 0000 0000 0000 0000 0000  ................
- ```
- Many zeroes later we get to something interesting! A subtle difference right before this filename?
- Maybe we have some sort of file index since you can see no log has a 3 and with log has a 4.
- But what about the bytes that come before?
+```
 
- if we skip right to the end of each hexdump we can see which address each byte ends on.
+Many zeroes later we get to something interesting! A subtle difference right before this filename?
+Maybe we have some sort of file index since you can see no log has a 3 and with log has a 4.
+But what about the bytes that come before?
+
+if we skip right to the end of each hexdump we can see which address each byte ends on.
+
 ```diff
 -000d1800: 0000 0000 0000 0000 00                   .........
 +000df9b0: 0000 0000 1900 0000                      ........
 ```
+
 Windows is little endian so if we read the bytes in the diff backwards:
+
 ```diff
 -09 180d 00 ==> 000d1809
 +b8 f90d 00 ==> 000df9b8
 ```
+
 We seem to get the address of one byte more than the final byte in the entire dump.
 So this marks the end of the entire file and has nothing to do with CrashContext.runtime-xml
 
@@ -94,6 +101,7 @@ After what I'm calling for now the file index, we get a bit of padding, `04 01 0
  00000340: 6e63 6f64 696e 673d 2255 5446 2d38 223f  ncoding="UTF-8"?
  00000350: 3e0d 0a3c 4647 656e 6572 6963 4372 6173  >..<FGenericCras
 ```
+
 Many zeroes later we get to a difference just before the file's content.
 This could be a 4-bit unsigned integer for file size. Reading as little endian we get:
 
@@ -108,6 +116,7 @@ The xml starts at 0x032B so if we add our sizes we should get taken to the end o
 
 for no log:
 0x032B + 0xa7f8 = 0xab23
+
 ```
 0000ab10: 6572 6963 4372 6173 6843 6f6e 7465 7874  ericCrashContext
 0000ab20: 3e0d 0a01 0000 0004 0100 0043 7261 7368  >..........Crash
@@ -116,11 +125,13 @@ for no log:
 
 for with log:
 0x032B + 0x9e07 = 0xa132
+
 ```
 0000a120: 7269 6343 7261 7368 436f 6e74 6578 743e  ricCrashContext>
 0000a130: 0d0a 0100 0000 0401 0000 4372 6173 6852  ..........CrashR
 0000a140: 6570 6f72 7443 6c69 656e 742e 696e 6900  eportClient.ini.
 ```
+
 So yup that's definitely file size!
 
 Since the xml was quite different, the git diff is no longer useful.
@@ -129,7 +140,8 @@ Anyways we've seen enough.
 In both cases, after the content is finished, we go right back to hitting `04 01 00 00` and starting the name of the next file.
 So that "file index" I mentioned earlier is just a count for how many files there are since it only appears once.
 
-## To sum it all up
+== To sum it all up
+
 Unreal's crash report file is as follows:
 
 - 3 byte header "CR1"
@@ -143,4 +155,4 @@ Unreal's crash report file is as follows:
 all strings after the CR1 header begin with `04 01 00 00`
 The remainder of the file is just filename + file content for every file included.
 
-## [Episode 3: Making my own crash report server](https://samcollier.dev/2025/11/10/CrashReporting.html)
+== #link("https://samcollier.dev/crash-reporting/ep3")[Episode 3: Making my own crash report server]

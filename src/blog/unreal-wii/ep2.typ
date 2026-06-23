@@ -1,19 +1,20 @@
----
-layout: post
-title: "UE5 on the Wii: Episode 2"
-date: 2025-11-07
-thumbnail: /assets/thumbs/LUR-WiiCover.png
-description: "Remember, this is an honors project"
----
+#import "../../../templates/base.typ": conf
 
-For my honors project, I'm porting Unreal Engine 5 to the Wii. 
+#show: conf.with(
+  page-title: "UE5 on the Wii: Episode 2",
+  date: datetime(year: 2025, month: 11, day: 07),
+  description: "Remember, this is an honors project",
+  giscus: true,
+)
+
+For my honors project, I'm porting Unreal Engine 5 to the Wii.
 You might think achieving this crazy ambitious goal would be enough, and it would be for my personal satisfaction.
 However, the honors project is more about research and applying the scientific method in an academic paper. The artifact that gets developed
 is more of a secondary priority as far as the module is concerned.
 
 So instead of going in guns blazing and rushing to get Unreal Engine 5 compiling, I needed to take a step back and think about my paper.
 
-# The proposal
+= The proposal
 
 I had to submit a formal three page proposal, which was graded by my supervisor.
 This was the first time I had to really think about the meaning behind my project.
@@ -34,9 +35,10 @@ But my project may have to dive deep on graphics research to fulfill academic ex
 Another vertical to explore is asset cooking. The Wii's byte order is big endian which is different from any platform supported by Unreal Engine.
 We also need to heavily optimize assets for the Wii's architecture and very limited system memory.
 
-<object data="/assets/HonorsProposal.pdf" width="800" height="500" type='application/pdf'></object>
+#link("/assets/unreal-wii/HonorsProposal.pdf")[Honors Project Proposal (PDF)]
 
-# What would a mimimum viable product look like?
+= What would a minimum viable product look like?
+
 What if it's just not feasible to get Unreal Engine 5 on the Wii? It's too early to know for sure.
 If my research question is something to do with fixed-function techniques without shaders, I'd be able to pivot pretty easily.
 I could at least port a modern graphics wrapper such as webGPU to the Wii instead and go all in on fixed-function vs programmable pipelines.
@@ -45,8 +47,9 @@ But there's also so much more to the Wii than graphics! It has a sick controller
 
 The next submission is a couple weeks away. It's a feasibility demo where I must provide a research question, gantt chart, risk analysis, code, structured diagram, and a literature review in a ~20 minute presentation/discussion.
 
-# Ethical concerns
-<img src="../../../assets/nintendo-lawyers.webp" alt="Nintendo Lawyers" width="500"/>
+= Ethical concerns
+
+#image("../../assets/unreal-wii/nintendo-lawyers.webp")
 
 I am no lawyer, but I think this project is legal in the UK.
 I don't expect this will be high on Nintendo's hitlist anyway since it doesn't aid piracy in any way.

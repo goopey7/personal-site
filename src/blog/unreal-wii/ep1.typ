@@ -1,31 +1,36 @@
----
-layout: post
-title: "UE5 on the Wii: Episode 1"
-date: 2025-09-25
-thumbnail: /assets/thumbs/LUR-WiiCover.png
-description: "Cross-compiling with CMake"
----
+#import "../../../templates/base.typ": conf
+
+#show: conf.with(
+  page-title: "UE5 on the Wii: Episode 1",
+  date: datetime(year: 2025, month: 09, day: 25),
+  description: "Cross-compiling with CMake",
+  giscus: true,
+)
 
 I've decided to go with putting Unreal Engine 5 on the Wii for my dissertation!
 
-# The Toolchain
-I followed [devkitpro's installation guide](https://devkitpro.org/wiki/devkitPro_pacman) 
+= The Toolchain
+
+I followed #link("https://devkitpro.org/wiki/devkitPro_pacman")[devkitpro's installation guide]
 so I now have everything available through pacman. Installing the Wii stuff was super easy on Arch!
 I now have the PowerPC toolchain (including a gcc/g++ compiler), a bunch of wii examples, cmake files, and several tools!
 
-# CMake Wii Hello World
-To get my feet a little wet I'll grab the [cmake example](https://github.com/devkitPro/wii-examples/tree/master/templates/cmake/application)
+= CMake Wii Hello World
+
+To get my feet a little wet I'll grab the #link("https://github.com/devkitPro/wii-examples/tree/master/templates/cmake/application")[cmake example]
 to see if I can get cmake working.
 Although Unreal uses it's own custom build system,
 understanding how CMake is setup will probably help us understand what's required when building Wii applications.
 
 The example does not work out of the box with the ol' reliable: `cmake -S . -B build`
+
 ```
 CMake Error at CMakeLists.txt:17 (ogc_create_dol):
   Unknown CMake command "ogc_create_dol".
 ```
 
 So let's read the CMakeLists.txt:
+
 ```cmake
 cmake_minimum_required(VERSION 3.13)
 
@@ -50,17 +55,21 @@ I have two questions:
 1. How do we know to use the PowerPC compiler?
 2. wtf is `ogc_create_dol` and where do I find it?
 
-## Question 1: How do we know to use the PowerPC compiler?
-Let's read up on [cross compiling with CMake](https://cmake.org/cmake/help/book/mastering-cmake/chapter/Cross%20Compiling%20With%20CMake.html).
+== Question 1: How do we know to use the PowerPC compiler?
+
+Let's read up on #link("https://cmake.org/cmake/help/book/mastering-cmake/chapter/Cross%20Compiling%20With%20CMake.html")[cross compiling with CMake].
 Looks like we need to make a toolchain file which sets all the necessary variables such as which compiler to use, system name, etc. We can then specify this file by setting CMAKE_TOOLCHAIN_FILE.
-Chances are this toolchain file already exists in $DEVKITPRO/cmake:
+Chances are this toolchain file already exists in \$DEVKITPRO/cmake:
+
 ```
 Catnip/                 dkp-catnip-utils.cmake     dkp-initialize-path.cmake   ogc-common.cmake
 catnip-main.cmake       dkp-custom-target.cmake    dkp-linker-utils.cmake      Platform/
 devkitPPC.cmake         dkp-embedded-binary.cmake  dkp-rule-overrides.cmake    Wii.cmake
 dkp-asset-folder.cmake  dkp-impl-helpers.cmake*    dkp-toolchain-common.cmake
 ```
-### $DEVKITPRO/cmake/devkitPPC.cmake
+
+=== \$DEVKITPRO/cmake/devkitPPC.cmake
+
 ```cmake
 include(${CMAKE_CURRENT_LIST_DIR}/dkp-initialize-path.cmake)
 include(dkp-toolchain-common)
@@ -71,9 +80,11 @@ __dkp_toolchain(devkitPPC ppc powerpc-eabi)
 
 set(DKP_INSTALL_PREFIX_INIT ${DEVKITPRO}/portlibs/ppc)
 ```
+
 This looks like it could be it!
 
-### $DEVKITPRO/cmake/Wii.cmake
+=== \$DEVKITPRO/cmake/Wii.cmake
+
 ```cmake
 cmake_minimum_required(VERSION 3.13)
 
@@ -83,9 +94,11 @@ endif()
 
 include(${CMAKE_CURRENT_LIST_DIR}/ogc-common.cmake)
 ```
+
 CMAKE_SYSTEM_NAME is also something set in a toolchain file...
 
-### $DEVKITPRO/cmake/ogc-common.cmake
+=== \$DEVKITPRO/cmake/ogc-common.cmake
+
 ```cmake
 cmake_minimum_required(VERSION 3.13)
 
@@ -122,8 +135,9 @@ find_program(ELF2DOL_EXE NAMES elf2dol HINTS "${DEVKITPRO}/tools/bin")
 find_program(GCDSPTOOL_EXE NAMES gcdsptool HINTS "${DEVKITPRO}/tools/bin")
 find_program(GXTEXCONV_EXE NAMES gxtexconv HINTS "${DEVKITPRO}/tools/bin")
 ```
+
 Ahhhhh of course. The Wii and the Gamecube are both PowerPC devices which devkitpro supports!
-So let's see what happens when I set CMAKE_TOOLCHAIN_FILE to $DEVKITPRO/cmake/Wii.cmake
+So let's see what happens when I set CMAKE_TOOLCHAIN_FILE to \$DEVKITPRO/cmake/Wii.cmake
 
 ```
 sam@rustbucket ~/s/application> cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE=$DEVKITPRO/cmake/Wii.cmake
@@ -142,17 +156,21 @@ sam@rustbucket ~/s/application> cmake --build build
 Converting application to .dol format
 [100%] Built target application
 ```
+
 That's done it! We have a build!
 
-## Question 2: wtf is `ogc_create_dol` and where do I find it?
+== Question 2: wtf is `ogc_create_dol` and where do I find it?
+
 Well fortunately the second half of this question has already been answered.
 It's included in the OGC cmake files which our Wii.cmake toolchain file includes for us.
 
 But what does it do? The build seems to link to a .elf file and then right at the end that gets converted to a .dol file.
 
-### What are these filetypes?
-#### ELF
-From [wiki.osdev.org](https://wiki.osdev.org/ELF):
+=== What are these filetypes?
+
+==== ELF
+
+From #link("https://wiki.osdev.org/ELF")[wiki.osdev.org]:
 
 *ELF (Executable and Linkable Format) was designed by Unix System Laboratories while working with Sun Microsystems on SVR4 (UNIX System V Release 4.0). Consequently, ELF first appeared in Solaris 2.0 (aka SunOS 5.0), which is based on SVR4. The format is specified in the System V ABI.*
 
@@ -160,14 +178,17 @@ From [wiki.osdev.org](https://wiki.osdev.org/ELF):
 
 *Today, ELF is considered the standard format on Unix-alike systems. While it has some drawbacks (e.g., using up one of the scarce general purpose registers of the IA-32 when using position-independent code), it is well supported and documented.*
 
-From [wiibrew.org](https://wiibrew.org/wiki/ELF):
+From #link("https://wiibrew.org/wiki/ELF")[wiibrew.org]:
 
 *This format is supported by many Wii homebrew loading techniques, particularly the Homebrew Channel, although most methods also support Nintendo's .dol format, and some methods only support one or the other.*
-#### DOL
-From [wiibrew.org](https://wiibrew.org/wiki/DOL):
+
+==== DOL
+
+From #link("https://wiibrew.org/wiki/DOL")[wiibrew.org]:
 
 *The Dol file format is the main executable file format for both the GameCube and the Wii. The name presumably refers to "Dolphin", which was the GameCube's codename. It is a simple file format consisting of a header and up to 7 loadable code sections (Text0..Text6) and up to 11 data sections (Data0..Data10). All values in the header are unsigned big-endian 32-bit values.*
 
-### Additional Observations
+=== Additional Observations
+
 The .ELF file is significantly larger than the .DOL file (1.6Mib vs 325KiB). So .DOL really is simple!
 Both seem to run fine on Dolphin

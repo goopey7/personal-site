@@ -1,0 +1,139 @@
+:root {
+  --bg: #161616;
+  --bg-soft: #1e1e1e;
+  --bg-code: #222222;
+  --fg: #f2f4f8;
+  --fg-dim: #8b8d92;
+  --red: #ee5396;
+  --green: #25be6a;
+  --teal: #08bdba;
+  --blue: #78a9ff;
+  --purple: #be95ff;
+  --cyan: #33b1ff;
+  --orange: #d65d0e;
+}
+
+body {
+  margin: 0 auto;
+  max-width: 720px;
+  padding: 0 1.5rem;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 1.1rem;
+  line-height: 1.8;
+}
+
+nav {
+  margin: 2rem 0 1.5rem;
+}
+
+nav a {
+  color: var(--teal);
+  text-decoration: none;
+  margin-right: 1rem;
+  font-size: 1rem;
+}
+
+nav a:hover {
+  color: var(--cyan);
+  text-decoration: underline;
+}
+
+h1 {
+  color: var(--cyan);
+  font-size: 1.8rem;
+  margin: 1.5rem 0 0.5rem;
+  line-height: 1.3;
+}
+
+h2 {
+  color: var(--blue);
+  font-size: 1.4rem;
+  margin: 1.5rem 0 0.5rem;
+  line-height: 1.3;
+}
+
+h3 {
+  color: var(--purple);
+  font-size: 1.2rem;
+  margin: 1.2rem 0 0.4rem;
+  line-height: 1.3;
+}
+
+h4 {
+  color: var(--teal);
+  margin: 1rem 0 0.3rem;
+}
+
+a {
+  color: var(--blue);
+}
+
+a:hover {
+  color: var(--cyan);
+}
+
+p {
+  margin: 0.8rem 0;
+}
+
+ul, ol {
+  margin: 0.5rem 0;
+  padding-left: 1.5rem;
+}
+
+li {
+  margin: 0.3rem 0;
+}
+
+code {
+  background: var(--bg-code);
+  padding: 0.2em 0.4em;
+  border-radius: 3px;
+  font-size: 0.9em;
+}
+
+pre {
+  background: var(--bg-code);
+  padding: 1rem;
+  border-radius: 4px;
+  overflow-x: auto;
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+pre code {
+  background: none;
+  padding: 0;
+}
+
+pre code span[style*="#d73948"] { color: #ee5396 !important; }
+pre code span[style*="#4b69c6"] { color: #78a9ff !important; }
+pre code span[style*="#198810"] { color: #46c880 !important; }
+pre code span[style*="#b60157"] { color: #08bdba !important; }
+pre code span[style*="#16718d"] { color: #33b1ff !important; }
+pre code span[style*="#8b41b1"] { color: #be95ff !important; }
+pre code span[style*="#301414"] { color: #ee5396 !important; }
+pre code span[style*="#1d6c76"] { color: #46c880 !important; }
+pre code span[style*="#74747c"] { color: #999999 !important; }
+
+blockquote {
+  margin: 0.8rem 0;
+  padding: 0.2rem 1rem;
+  border-left: 3px solid var(--fg-dim);
+  color: var(--fg-dim);
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 1.5rem 0;
+  border-radius: 4px;
+}
+
+.date {
+  color: var(--fg-dim);
+  font-size: 0.9rem;
+}
