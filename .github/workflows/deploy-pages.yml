@@ -24,6 +24,7 @@ jobs:
           github_access_token: ${{ secrets.GITHUB_TOKEN }}
       - run: nix build -L
       - run: mkdir -p _site && cp -a result/. _site/
+      - run: ./generate-feed.sh
       - uses: actions/upload-pages-artifact@v3
 
   deploy:

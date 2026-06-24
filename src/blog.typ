@@ -57,3 +57,7 @@
     ]
   ]
 }
+
+#html.p(class: "rss-link")[
+  #html.a(href: "/feed.xml")[rss feed]
+]

@@ -25,7 +25,13 @@ body {
 }
 
 nav {
+  display: flex;
+  align-items: center;
   margin: 2rem 0 1.5rem;
+}
+
+nav .nav-right {
+  margin-left: auto;
 }
 
 nav a {
@@ -38,6 +44,14 @@ nav a {
 nav a:hover {
   color: var(--cyan);
   text-decoration: underline;
+}
+
+nav a.social {
+  color: var(--blue);
+}
+
+nav a.social:hover {
+  color: var(--cyan);
 }
 
 h1 {
@@ -136,4 +150,13 @@ img {
 .date {
   color: var(--fg-dim);
   font-size: 0.9rem;
+}
+
+.rss-link {
+  margin-top: 2rem;
+}
+
+.rss-link a {
+  color: var(--fg-dim);
+  font-size: 0.85rem;
 }
