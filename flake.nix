@@ -87,6 +87,7 @@
           default = pkgs.mkShell {
             packages = with pkgs; [
               typst
+              python3
               self.packages.${system}.site-generator
             ];
           };
